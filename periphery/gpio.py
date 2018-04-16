@@ -72,11 +72,11 @@ class GPIO(object):
             # Loop until GPIO is exported
             exported = False
             for i in range(GPIO.GPIO_EXPORT_STAT_RETRIES):
+                # Esperar ANTES de comprobar evita error cuando se manipula GPIO sin usuario root (usuario en grupo gpio)
+                time.sleep(GPIO.GPIO_EXPORT_STAT_DELAY)
                 if os.path.isdir(gpio_path):
                     exported = True
                     break
-
-                time.sleep(GPIO.GPIO_EXPORT_STAT_DELAY)
 
             if not exported:
                 raise TimeoutError("Exporting GPIO: waiting for '%s' timed out" % gpio_path)
